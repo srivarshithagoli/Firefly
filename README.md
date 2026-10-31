@@ -6,8 +6,6 @@ A Spring Boot backend for **offline UPI-style payments routed through a Bluetoot
 
 This repo is the server side, plus a software simulator of the mesh, so the whole flow runs on one laptop with no Bluetooth hardware.
 
-![Dashboard screenshot](docs/dashboard.png)
-
 ## Features
 
 - **End-to-end encryption through untrusted relays**: hybrid RSA-OAEP + AES-256-GCM; intermediaries can't read or modify a packet
@@ -39,14 +37,14 @@ Open **http://localhost:8080**. Run the tests with `./mvnw test`.
 
 ```mermaid
 flowchart LR
-    A["Sender phone (offline)"] -->|"encrypt + gossip"| B["Stranger phones"]
-    B --> C["Bridge phone (has 4G)"]
-    C -->|"HTTPS POST"| D["/api/bridge/ingest"]
-    D --> E["1. SHA-256 hash of ciphertext"]
-    E --> F["2. Atomically claim hash"]
-    F --> G["3. Decrypt (RSA-OAEP + AES-GCM)"]
-    G --> H["4. Freshness check (24h)"]
-    H --> I["5. Transactional settlement"]
+    A[Sender phone offline] -->|encrypt and gossip| B[Stranger phones]
+    B --> C[Bridge phone with 4G]
+    C -->|HTTPS POST| D[Ingest endpoint]
+    D --> E[Hash ciphertext SHA-256]
+    E --> F[Claim hash atomically]
+    F --> G[Decrypt RSA-OAEP and AES-GCM]
+    G --> H[Freshness check 24h]
+    H --> I[Transactional settlement]
 ```
 
 ## Key design decisions
@@ -120,6 +118,3 @@ src/main/java/com/demo/upimesh/
 src/test/         Concurrency, tamper and crypto tests
 ```
 
-## License
-
-MIT
